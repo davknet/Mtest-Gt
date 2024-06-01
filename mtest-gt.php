@@ -1,6 +1,7 @@
 <?php 
 
-use Inc\Cls\InstallMtestGt ;
+use Inc\Cls\InstallMtestGt  ;
+use Inc\Cls\DeactiveMtestGt ;
 /*
  * Plugin Name:       MTest-Gt
  * Plugin URI:        https://example.com/plugins/the-basics/
@@ -33,12 +34,12 @@ use Inc\Cls\InstallMtestGt ;
  require( MTEST_GT_PLUGIN_DIR_PATH . "functions.php" ) ;
 
 
-  $plugin_gt = new InstallMtestGt();
-
+  $plugin_gt          =  new InstallMtestGt()  ;
+  $deactive_plugin_Gt =  new DeactiveMtestGt() ;
 //   echo '<pre>' ;
 //  var_dump( $plugin_gt->allDataBaseTables );
 
 register_activation_hook(__FILE__, array( $plugin_gt , 'activate'));
-register_deactivation_hook(__FILE__, array( $plugin_gt , 'deactivate'));
+register_deactivation_hook(__FILE__, array( $deactive_plugin_Gt , 'deactivate'));
 
 

@@ -10,7 +10,11 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-
+/**
+ * Acitvate Mtest-Gt Plugin
+ * also creates database and options
+ * 
+*/
 
 
 
@@ -37,6 +41,13 @@ class InstallMtestGt
       
     }
 
+        /**
+         * 
+         * plugin activation method
+         * the method ensures wordpress has appropriate version
+         * and also php verssion is higher then 7.3 
+         * @return void 
+        */
 
     public function activate()
     {
@@ -61,18 +72,26 @@ class InstallMtestGt
             );
 
         }
-       
 
         $this->create_non_existent_tables( $this->prefix  );
-
-
-
         error_log('Mtest-GT Plugin has been activated.');
+      
     }
 
 
+        /**
+         * the method check if table name is  in the all
+         *  database tables list if not return false 
+         *
+         * @param string  $table_name  database table name 
+         * @param string  $prefix  database table prefix 
+         * @return void 
+        */
 
-    protected function make_sure_the_table_does_not_exist( $table_name ,  $prefix = null )
+    
+
+
+    protected function make_sure_the_table_does_not_exist( string $table_name , string  $prefix = null )
     {       
             $n_table_name = ( !is_null($prefix) )? $prefix . $table_name : $table_name ;
 
@@ -84,7 +103,15 @@ class InstallMtestGt
     }
 
 
-    protected function create_non_existent_tables($prefix = null )
+
+        /**
+         * the method create not existing tables in database
+         * @param string  $prefix  database tables prefix 
+         * @return void 
+         * 
+        */
+
+    protected function create_non_existent_tables( string $prefix = null )
     {
          $prefix       = (is_null($prefix)) ? '' : $prefix ;
          $table_names  =  $this->plugin_table_names ;
