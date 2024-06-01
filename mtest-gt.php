@@ -38,6 +38,7 @@ use Inc\Cls\InstallMtestGt ;
 //   echo '<pre>' ;
 //  var_dump( $plugin_gt->allDataBaseTables );
 
-
+register_activation_hook(__FILE__, array( $plugin_gt , 'activate'));
+register_deactivation_hook(__FILE__, array( $plugin_gt , 'deactivate'));
 
 

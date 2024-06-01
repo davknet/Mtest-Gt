@@ -13,7 +13,7 @@ trait MtestGtDataBaseFunctions
 {
 
 
-    function sellectAllTablesNames()
+   protected  function sellectAllTablesNames()
     {
         global $wpdb ; 
         $sql = " SHOW TABLES ; " ;
@@ -21,10 +21,25 @@ trait MtestGtDataBaseFunctions
         return $result ;
     }
     
-    function getPrefix()
+   protected   function getPrefix()
     {
         global $wpdb ;
         return $wpdb->prefix ;
     }
+
+
+    protected function createDataBaseTable_all_skills_for_roll_TBL( string $name  )
+    {
+        global $wpdb ;
+        $sql = " CREATE TABLE  $name  (
+      
+         
+
+
+
+        ) " ;
+
+    }
+
 
 }
