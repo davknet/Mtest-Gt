@@ -1,7 +1,9 @@
 <?php 
 
-use Inc\Cls\InstallMtestGt  ;
+use Inc\Cls\UserLocalPlace;
 use Inc\Cls\DeactiveMtestGt ;
+use Inc\Cls\InstallMtestGt  ;
+use Inc\Cls\MtestGtCreateFrontEndPage;
 /*
  * Plugin Name:       MTest-Gt
  * Plugin URI:        https://example.com/plugins/the-basics/
@@ -36,10 +38,25 @@ use Inc\Cls\DeactiveMtestGt ;
 
   $plugin_gt          =  new InstallMtestGt()  ;
   $deactive_plugin_Gt =  new DeactiveMtestGt() ;
+  $user_lunguage      =   UserLocalPlace::get_instance();
 //   echo '<pre>' ;
 //  var_dump( $plugin_gt->allDataBaseTables );
 
 register_activation_hook(__FILE__, array( $plugin_gt , 'activate'));
 register_deactivation_hook(__FILE__, array( $deactive_plugin_Gt , 'deactivate'));
+add_action('plugins_loaded', array( $user_lunguage         , 'get_instance' ));
+
+register_activation_hook(__FILE__, array('Inc\Cls\EnsureThemeHasFooter', 'init'));
+
+add_action('plugins_loaded', function() {
+  new MtestGtCreateFrontEndPage(
+     __('Local Page ' , 'mtest-gt'),
+     __( 'Just another page ' , 'mtest-gt' )    ,
+      'your-local-page'
+  );
+
+});
+
+
 
 
