@@ -5,6 +5,71 @@ require ( MTEST_GT_PLUGIN_DIR_PATH . "vendor/autoload.php") ;
 
 
 
+
+
+
+
+
+
+function mtest_gt_frontend_style_register_style_frontend() {
+    wp_register_style(
+        'mtest-gt_style_page_style_frontend',
+        plugin_dir_url( __FILE__ ) . 'src/css/mtest-gt-page-style.css',
+        array(),
+        '1.0.0',
+        'all'
+    );
+}
+
+add_action('wp_enqueue_scripts', 'mtest_gt_frontend_style_register_style_frontend');
+
+function mtest_gt_frontend_style_enqueue_style_frontend() {
+    if (is_page('your-local-page')) {
+        wp_enqueue_style('mtest-gt_style_page_style_frontend');
+        wp_enqueue_script('jquery');
+        wp_enqueue_script('mtest-gt-frontent-user-tabs', plugin_dir_url( __FILE__ ) . 'src/js/mtest-gt-style-frontend-page-style.js', 
+        array('jquery'), '1.0.0', true);
+    }
+}
+
+add_action('wp_enqueue_scripts', 'mtest_gt_frontend_style_enqueue_style_frontend');
+
+
+
+// Enable SVG Uploads
+function allow_svg_uploads($mimes) {
+    $mimes['svg'] = 'image/svg+xml';
+    return $mimes;
+}
+add_filter('upload_mimes', 'allow_svg_uploads');
+
+// Fix SVG Mime Type
+function fix_svg_mime_type($data, $file, $filename, $mimes) {
+    $ext = pathinfo($filename, PATHINFO_EXTENSION);
+    if ($ext === 'svg') {
+        $data['type'] = 'image/svg+xml';
+        $data['ext'] = 'svg';
+    }
+    return $data;
+}
+add_filter('wp_check_filetype_and_ext', 'fix_svg_mime_type', 10, 4);
+
+// Sanitize SVG Uploads
+function sanitize_svg($svg) {
+    $svg = simplexml_load_string($svg);
+    if ($svg === false) {
+        // If the SVG is invalid, return an empty string.
+        return '';
+    }
+
+    // Convert the SimpleXML object back to a string.
+    return $svg->asXML();
+}
+add_filter('wp_handle_upload_prefilter', 'sanitize_svg');
+
+
+
+
 //  function changeTheLanguageOnLogin()
 // {
 //     $user_id = get_current_user_id() ;

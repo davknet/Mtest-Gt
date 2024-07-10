@@ -23,7 +23,7 @@ class UserLocalPlace
 
     protected string $api_url;
 
-    protected string $country_code;
+    protected string $country_code = '' ;
 
     /**
      * Constructor.
@@ -34,6 +34,7 @@ class UserLocalPlace
     {
         $this->setTextDomain();
         add_action('wp_login', array($this, 'changeTheLanguageOnLogin'), 10, 2);
+        add_action('init', [ $this , 'checkAndSetCookie' ] );
     }
 
     /**
@@ -50,6 +51,8 @@ class UserLocalPlace
         if (null == self::$instance) {
             self::$instance = new self();
         }
+
+       
 
         return self::$instance;
     }
@@ -70,7 +73,7 @@ class UserLocalPlace
 
         $this->setUserLanguageFromIP();
 
-        if ($this->country_code) {
+        if (!empty($this->country_code) && $this->country_code ) {
             // Update the site language
             update_user_meta($this->user_id, 'locale', $this->country_code);
             // Optionally, set the site language if it's a global change
@@ -97,6 +100,9 @@ class UserLocalPlace
         $response = wp_remote_get($this->api_url);
 
         if (is_wp_error($response)) {
+
+
+            var_dump($response);
             return;
         }
 
@@ -145,6 +151,82 @@ class UserLocalPlace
         load_plugin_textdomain( $domain, $abs_rel_path, $plugin_rel_path );
         }
     }
+
+
+
+
+  public static  function getUserIp_ForFlags() 
+  {
+      if (!empty($_SERVER['HTTP_CLIENT_IP'])) 
+      {
+          // IP from shared internet
+          $ip = $_SERVER['HTTP_CLIENT_IP'];
+  
+      } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+          // IP passed from proxy
+          $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+      } else {
+          // Regular IP address
+          $ip = $_SERVER['REMOTE_ADDR'];
+      }
+      if($ip == '::1')
+    {
+        $ip = '94.188.177.120';
+    }
+
+    return $ip ;
+  }
+
+
+
+  public static  function getCuntrycodeForflag($ip)
+  {
+      
+    
+
+      $api_url = 'http://www.geoplugin.net/php.gp?ip=' . $ip;
+      $response = wp_remote_get($api_url);
+      $body = wp_remote_retrieve_body($response);
+
+      if ($body) 
+      {
+          $data = unserialize($body);
+          $cuntry_code =     $data['geoplugin_countryCode'] ;
+          return  strtolower($cuntry_code); 
+      }
+
+         
+                       
+  }
+
+
+  public function checkAndSetCookie() {
+    $ip_address       = self::getUserIp_ForFlags();
+    $cookie_name      = 'user_ip_cache';
+    $cookie_flag_name = 'flug_name_cache';
+    $data             = 'us'; // Default value
+
+   
+    if (!isset($_COOKIE[$cookie_name]) || $_COOKIE[$cookie_name] !== $ip_address) {
+        // Set new cookies
+        setcookie($cookie_name, $ip_address, time() + (86400 * 3), "/");
+        $data = self::getCuntrycodeForflag($ip_address);
+        setcookie($cookie_flag_name, $data, time() + (86400 * 3), "/");
+    } else {
+       
+        if (isset($_COOKIE[$cookie_flag_name])) {
+            $data = $_COOKIE[$cookie_flag_name];
+        }
+    }
+
+  return $data ;
+   
+}
+
+
+
+
+    
 }
 
 

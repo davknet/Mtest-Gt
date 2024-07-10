@@ -1,44 +1,152 @@
-<?php
+<?php 
 namespace Inc\Cls;
+
+
+
+
+
+
+
+
+
+
 
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
-/**
- * Class to ensure the theme has get_footer() and provide fallback options.
- */
-class EnsureThemeHasFooter {
 
-    /**
-     * Checks if the theme has a get_footer() function based on template inclusion.
-     */
-    public static function checkFooterAvailability() {
-        add_action('template_include', function ($template) {
-            if (strpos($template, 'footer.php') !== false) {
-                // Theme has a footer.php file, likely using get_footer()
-                return;
-            }
 
-            // Fallback logic if no footer.php found:
-            // 1. Attempt to use get_footer() (might not work if theme doesn'  t use it)
-            if (function_exists('get_footer')) {
-                get_footer();
-            } else {
-                // 2. Provide a simple default footer or alternative action here
-                echo '<div style="text-align: center;">Footer Content</div>';
-            }
-        });
+
+
+
+
+
+
+
+
+
+
+
+class EnsureThemeHaseHeader
+{
+
+    protected static $instance = null;
+
+  public   $theme_directory;
+
+  public  bool $has_get_header ;
+
+    public   function __construct()
+    {
+        $this->theme_directory   =  get_template_directory();
+
+        $this->has_get_header = $this->searchGetThemeHeader($this->theme_directory);
+
     }
 
-    // Plugin initialization (optional):
-    public static function init() {
-        self::checkFooterAvailability();
+
+
+
+    public static function get_instance()
+    {
+
+        // If the single instance hasn't been set, set it now.
+        if (null == self::$instance) {
+            self::$instance = new self();
+        }
+
+        return self::$instance;
     }
 
-    // Usage example (if not using init):
-    // EnsureThemeHasFooter::checkFooterAvailability();
+
+
+
+   public  function searchGetThemeHeader($directory) {
+        $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($directory));
+        foreach ($iterator as $file) {
+            if ($file->isFile() && $file->getExtension() === 'php') {
+                $contents = file_get_contents($file->getPathname());
+                if (strpos($contents, 'get_header') !== false) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+
+
+    public function getHeader()
+    {
+        if ($this->has_get_header) 
+        {
+            
+          get_header() ;
+            
+        } else {
+            
+            $this->mtestGtHeader('mtestgt')  ;
+        }
+    }
+
+
+
+  protected   function mtestGtHeader($name = null) 
+    {
+        do_action('get_header', $name);
+    
+       
+        $templates = array();
+        $name = (string) $name;
+        if ('' !== $name) {
+            
+            $templates[] = MTEST_GT_PLUGIN_DIR_PATH . "templates/header-{$name}.php";
+        }
+    
+        
+        $templates[] = MTEST_GT_PLUGIN_DIR_PATH . 'templates/header.php';
+    
+        // Include the first template file found in the array
+        foreach ($templates as $template) {
+            if (file_exists($template)) {
+                include $template;
+                break;
+            }
+        }
+
+    }
+    
+
+
+
+
+
+    function get_footer($name = null, $args = array()) 
+    {
+        // Trigger a custom action hook before loading the footer template
+        do_action('mtest_gt_get_footer_before', $name, $args);
+    
+        // Define templates to check
+        $templates = array();
+        if ($name) {
+            $templates[] = "footer-{$name}.php";
+        }
+        $templates[] = 'mtest-gt-footer.php';
+    
+        // Check if the template exists in plugin directory
+        $template_found = false;
+        foreach ($templates as $template) {
+            $template_path = MTEST_GT_PLUGIN_DIR_PATH . 'templates/frontend/' . $template;
+            if (file_exists($template_path)) {
+                include $template_path;
+                $template_found = true;
+                break;
+            }
+        }
+
+
+
+    }
 }
-
-// Register activation hook (optional, if necessary):
-

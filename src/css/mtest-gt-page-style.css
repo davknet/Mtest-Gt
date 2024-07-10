@@ -1,0 +1,120 @@
+
+ @import  url(https://fonts.googleapis.com) ;
+ @import  url(https://fonts.gstatic.com) ;
+ @import  url(https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap);
+ @import  url(https://necolas.github.io/normalize.css/8.0.1/normalize.css);
+
+*{
+  box-sizing: border-box;
+  margin:0;
+  padding:0;
+} 
+
+.container {
+  width: 80%;
+  height: auto;
+  margin-left: 10%;
+  font-family: "Playfair Display", serif;
+  font-optical-sizing: auto;
+  font-weight: <weight>;
+  font-style: normal;
+}
+
+.tabs {
+  width: 100%;
+  display: block;
+  margin-top: 80px;
+}
+
+.tab-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  background-color: #fff;
+  border-bottom: 1px solid #ccc;
+  list-style-type: none !important;
+  max-width: 480px; /* Reduce the width */
+}
+
+.tab-links li {
+  flex: 1 1 auto;
+  margin: 0;
+  padding: 5px; /* Reduce the padding */
+  background-color: #f1f1f1;
+  text-align: center;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: background-color 0.3s, border-bottom 0.3s;
+  list-style-type: none;
+  max-width: 120px; /* Reduce the width */
+
+
+}
+
+.tab-links li.active {
+  background-color: #fff;
+  border-bottom: 2px solid #000;
+}
+
+.tab-links li a {
+  text-decoration: none;
+  color: #000;
+  display: block;
+  max-width: 120px;
+  height: 60px; 
+  margin-top: 10px;
+  text-align: center;
+  overflow: hidden;
+  position: relative; 
+  padding: 0 ;
+  margin: 0; 
+  padding-top: 20px;
+}
+
+.tab-links li a img {
+
+ width:85%;
+ margin:0 ;
+ padding:0;
+ object-fit: cover;
+ margin-top: 0 ;
+ position: absolute; 
+  top: 0%; 
+  left: 0%; 
+  padding-top: -30px;
+  /* transform: translate(-50%, -50%);  */
+}
+
+.tab-content {
+  padding: 20px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+}
+
+.tab {
+  display: none;
+}
+
+.tab.active {
+  display: block;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+  .tab-links li {
+    padding: 5px; /* Adjust for smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .tab-links {
+    flex-direction: column;
+  }
+
+  .tab-links li {
+    padding: 5px 0; /* Adjust for smaller screens */
+  }
+}

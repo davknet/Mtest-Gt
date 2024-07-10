@@ -32,6 +32,7 @@ use Inc\Cls\MtestGtCreateFrontEndPage;
 
  define('MTEST_GT_PLUGIN_DIR_PATH' , plugin_dir_path( __FILE__ ) ) ;
  define('MTEST_HOME_URL' , home_url() ) ;
+ define('MTEST_GT_PLUGIN_URL' , plugin_dir_url( __FILE__ ) ) ;
 
  require( MTEST_GT_PLUGIN_DIR_PATH . "functions.php" ) ;
 
@@ -39,7 +40,8 @@ use Inc\Cls\MtestGtCreateFrontEndPage;
   $plugin_gt          =  new InstallMtestGt()  ;
   $deactive_plugin_Gt =  new DeactiveMtestGt() ;
   $user_lunguage      =   UserLocalPlace::get_instance();
-//   echo '<pre>' ;
+ 
+//   echo '<pre>' ;EnsureThemeHasFooter
 //  var_dump( $plugin_gt->allDataBaseTables );
 
 register_activation_hook(__FILE__, array( $plugin_gt , 'activate'));
